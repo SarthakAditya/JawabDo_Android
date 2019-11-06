@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "949766930175",
+    "firebase_url": "https://jawabdo-4a244.firebaseio.com",
+    "project_id": "jawabdo-4a244",
+    "storage_bucket": "jawabdo-4a244.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949766930175:android:49c3216e4e3d0429ed56ca",
+        "android_client_info": {
+          "package_name": "com.example.jawaabdo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "949766930175-h6npf4rc5cfh5l8ibqsbkboh2raklb7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvwOzwOuBfqy9alD8Si5k9EYATa02rezc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "949766930175-h6npf4rc5cfh5l8ibqsbkboh2raklb7p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
