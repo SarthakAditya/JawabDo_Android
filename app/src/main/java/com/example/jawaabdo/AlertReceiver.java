@@ -8,27 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+
 public class AlertReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
         String courseID = intent.getStringExtra("courseID");
         Log.d("SarthakAditya", "Course ID : "+courseID);
-        Intent mainIntent = new Intent(context, Courses.class);
-        PendingIntent contextIntent = PendingIntent.getActivity(context,0, mainIntent,0);
 
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification.Builder builder = new Notification.Builder(context);
-
-        builder.setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle(courseID)
-                .setContentText("Quiz has started")
-                .setWhen(System.currentTimeMillis())
-                .setAutoCancel(true)
-                .setContentIntent(contextIntent);
-
-        notificationManager.notify(1,builder.build());
-
+        NotificationHelper notificationHelper = new NotificationHelper(context);
+        NotificationCompat.Builder nb = notificationHelper.getChannel1Notification(courseID,"Test is active");
+        notificationHelper.getmManager().notify(1,nb.build());
     }
 }

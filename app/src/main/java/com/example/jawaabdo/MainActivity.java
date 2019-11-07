@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +37,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firebaseAuth = FirebaseAuth.getInstance();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String uT = pref.getString("a","");
+        String userId = pref.getString("b","");
+        Log.i("ashishrana","sharedprefereces stored - "+uT+"  "+userId);
+        if(uT.equals("F") ){
+            Intent intent = new Intent(MainActivity.this, Courses.class);
+            intent.putExtra("userid",userId);
+            startActivity(intent);
+        }
+        else if(uT.equals("T")){
+            Intent intent = new Intent(MainActivity.this, ShowCoursesActivity.class);
+            Log.d("my_message","user id is login is "+userId);
+            intent.putExtra("EXTRA_USER_ID",userId);
+            startActivity(intent);
+        }
         loginasrg=(RadioGroup)findViewById(R.id.loginasrg);
         loginasrg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {

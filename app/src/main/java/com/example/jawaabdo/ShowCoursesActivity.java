@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -196,6 +198,14 @@ public class ShowCoursesActivity extends AppCompatActivity {
         intent.putExtra("EXTRA_COURSE_ID", separated[a]);
         Log.d("my_message", separated[a].length() + "" + separated[a]);
         startActivity(intent);
+    }
+    public void logout(View view) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("a", "");
+        editor.putString("b", "");
+        editor.apply();
+        finish();
     }
 
 

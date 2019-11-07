@@ -8,7 +8,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -85,17 +87,29 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
                             {
                                 if (snapshot_C.getKey().equals(names.get(i)))
                                 {
-                                    /*if (snapshot_C.child("Time").exists())
+                                    if (snapshot_C.child("Time").exists())
                                     {
+                                        Calendar current = Calendar.getInstance();
+                                        Log.d("SarthakAditya","Current Time is : " + current.getTimeInMillis());
+
                                         Calendar c = Calendar.getInstance();
-                                        c.set(Calendar.MONTH,Integer.parseInt(snapshot_C.child("Time").child("Month").getValue().toString()));
+                                        c=current;
+                                        c.set(Calendar.YEAR,2019);
+                                        c.set(Calendar.MONTH,(Integer.parseInt(snapshot_C.child("Time").child("Month").getValue().toString()))-1);
                                         c.set(Calendar.DATE,Integer.parseInt(snapshot_C.child("Time").child("Date").getValue().toString()));
                                         c.set(Calendar.HOUR_OF_DAY,Integer.parseInt(snapshot_C.child("Time").child("HRS").getValue().toString()));
                                         c.set(Calendar.MINUTE,Integer.parseInt(snapshot_C.child("Time").child("MINS").getValue().toString()));
 
-                                        Log.d("SarthakAditya","Notification To be Launched at" + c);
+                                        Log.d("SarthakAditya","Notification To be Launched at : " + c.getTimeInMillis());
 
+                                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                                         Intent intent = new Intent(Courses.this,AlertReceiver.class);
+                                        intent.putExtra("courseID",snapshot_C.getKey().toString());
+                                        PendingIntent alarmintent = PendingIntent.getBroadcast(Courses.this,1, intent,0);
+
+                                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), alarmintent);
+
+                                        /*Intent intent = new Intent(Courses.this,AlertReceiver.class);
                                         intent.putExtra("courseID",snapshot_C.getKey().toString());
 
                                         PendingIntent alarmintent = PendingIntent.getBroadcast(Courses.this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
@@ -104,11 +118,11 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
                                         long alarmstarttime = c.getTimeInMillis();
                                         alarmManager.set(AlarmManager.RTC_WAKEUP,alarmstarttime,alarmintent);
 
-                                        Toast.makeText(getApplicationContext(), "Notification Set", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Notification Set", Toast.LENGTH_SHORT).show();*/
 
                                     }
                                     else
-                                        Log.d("SarthakAditya","Not Tests Found");*/
+                                        Log.d("SarthakAditya","Not Tests Found");
                                     Instnames.add(snapshot_C.child("Instructor").getValue().toString());;
                                 }
                             }
@@ -262,6 +276,14 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
 
             return row;
         }
+    }
+    public void logOut(View view){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("a","");
+        editor.putString("b","");
+        editor.apply();
+        finish();
     }
 }
 

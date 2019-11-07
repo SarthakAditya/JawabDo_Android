@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -62,7 +64,15 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 uT = dataSnapshot.getValue(String.class) ;
-                                Log.i("Status" , uT) ;
+                                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("a",uT);
+                                editor.putString("b",user_id);
+                                editor.commit();
+                                String ashish = pref.getString("uT","");
+                                String rana = pref.getString("userid","");
+                                Log.i("ashishrana" ,"sharedpref in login is "+ashish+"  "+rana) ;
+                                Log.i("ashishrana" ,"in login activity ut is "+uT) ;
                                 if(uT.equals("F") ){
                                     Intent intent = new Intent(LoginActivity.this, Courses.class);
                                     intent.putExtra("userid",user_id);
