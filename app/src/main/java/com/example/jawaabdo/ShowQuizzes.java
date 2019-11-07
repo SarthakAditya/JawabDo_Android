@@ -37,22 +37,43 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
     String[] quizTime={"2:14"};
     int image=R.drawable.quiz;
     Quizdata quizdata;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference CoursesRef,SingleCourseRef ;
     ArrayList<String> names = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_quizzes);
-        list=(ListView)findViewById(R.id.quizList);
-        MyAdapter2 adapter = new MyAdapter2(this, courseslist, image,quizTime);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
-        //quizdata = (Quizdata)getIntent().getSerializableExtra("Quiz_data") ;
+
         courseName=getIntent().getStringExtra("Quiz_data");
         uid = getIntent().getStringExtra("Userid") ;
-        try{
-        Log.d("xyz", getIntent().getStringExtra("Quiz_data"));}
-        catch (Exception e){}
+        CoursesRef = database.getReference("Courses/" + courseName);
+
+        CoursesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.child("Tests").exists())
+                {
+                    setContentView(R.layout.activity_show_quizzes);
+                    list=(ListView)findViewById(R.id.quizList);
+                    MyAdapter2 adapter = new MyAdapter2(ShowQuizzes.this, courseslist, image,quizTime);
+                    list.setAdapter(adapter);
+                    list.setOnItemClickListener(ShowQuizzes.this);
+                    //quizdata = (Quizdata)getIntent().getSerializableExtra("Quiz_data") ;
+                    try{
+                        Log.d("xyz", getIntent().getStringExtra("Quiz_data"));}
+                    catch (Exception e){}
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
     public void onItemClick(AdapterView<?> parent, View view, int position, long id){
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("Courses").child(courseName).child("Time")
@@ -78,18 +99,15 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
                         int quiz_hour = Integer.parseInt(names.get(2));
                         int quiz_minute = Integer.parseInt(names.get(3));
                         int quiz_duration = Integer.parseInt(names.get(1));
-                        Boolean ontime = true;
-                        Log.i("ashishrana","current time - month day hour minute"+month+" "+day+" "+hour+" "+minute);
-                        Log.i("ashishrana","quiz time - month day hour minute"+quiz_month+" "+quiz_day+" "+quiz_hour+" "+quiz_minute);
                         if(month == quiz_month && quiz_day == day){
                             Log.i("ashishrana","current time - month day hour minute"+month+" "+day+" "+hour+" "+minute);
                             int curtime = hour*60+minute;
                             int quiztime = quiz_hour*60+quiz_minute;
-                            int endtime = curtime + quiz_duration;
+                            int endtime = quiztime + quiz_duration;
                             Log.i("ashishrana","Current Time : "+ curtime);
                             Log.i("ashishrana","Quiz Time : "+ quiztime);
                             Log.i("ashishrana","End Time : "+ endtime);
-                            if(curtime >= quiztime && curtime <= endtime){
+                            if(curtime >= quiztime && curtime < endtime){
                                 Intent intent=new Intent(getApplicationContext(),Quiz.class);
                                 intent.putExtra("Cname",courseName);
                                 intent.putExtra("Userid" , uid);

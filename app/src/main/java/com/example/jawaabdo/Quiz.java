@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Quiz extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -52,21 +53,6 @@ public class Quiz extends AppCompatActivity {
         courseName=getIntent().getStringExtra("Cname");
         uid = getIntent().getStringExtra("Userid") ;
 
-        timer=(TextView)findViewById(R.id.timer);
-        ct=new CountDownTimer(timeleft,1000) {
-            @Override
-            public void onTick(long l) {
-                timeleft=l;
-                long minutes=timeleft/60000;
-                long seconds=(timeleft%60000)/1000;
-                timer.setText(minutes+":"+seconds) ;
-            }
-
-            @Override
-            public void onFinish() {
-                showResult();
-            }
-        }.start();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         tq=(TextView)findViewById(R.id.questionview);
@@ -77,16 +63,53 @@ public class Quiz extends AppCompatActivity {
         viewopt4=(RadioButton)findViewById(R.id.radioopt4);
         next=(Button)findViewById(R.id.next);
         submit=(Button)findViewById(R.id.submit);
-        DatabaseReference myRef = database.getReference("Courses/" + courseName +"/Tests" );
+        DatabaseReference myRef = database.getReference("Courses/" + courseName );
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("my_message", Long.toString(dataSnapshot.getChildrenCount()));
+
+                int duration = Integer.parseInt(dataSnapshot.child("Time").child("Duration").getValue().toString());
+
+                Calendar cal = Calendar.getInstance();
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DATE);
+                int hour = cal.get(Calendar.HOUR_OF_DAY);
+                int minute = cal.get(Calendar.MINUTE);
+                int quiz_month = Integer.parseInt(dataSnapshot.child("Time").child("Month").getValue().toString());
+                int quiz_day = Integer.parseInt(dataSnapshot.child("Time").child("Date").getValue().toString());
+                int quiz_hour = Integer.parseInt(dataSnapshot.child("Time").child("HRS").getValue().toString());
+                int quiz_minute = Integer.parseInt(dataSnapshot.child("Time").child("MINS").getValue().toString());
+
+                int curtime = hour*60+minute;
+                int quiztime = quiz_hour*60+quiz_minute;
+                int endtime = quiztime + duration;
+
+                duration = endtime - curtime;
+
+                Log.d("Sarthak Aditya","Duration is : "+duration);
+
+                timer=(TextView)findViewById(R.id.timer);
+                ct=new CountDownTimer(duration*60000,1000) {
+                    @Override
+                    public void onTick(long l) {
+                        timeleft=l;
+                        long minutes=timeleft/60000;
+                        long seconds=(timeleft%60000)/1000;
+                        timer.setText(minutes+":"+seconds) ;
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        showResult();
+                    }
+                }.start();
+
+                //Log.d("my_message", Long.toString(dataSnapshot.getChildrenCount()));
                 //String tmp[] = new String[(int)dataSnapshot.getChildrenCount()] ;
                 ArrayList<String> tmp = new ArrayList<>() ;
                 int i = 0 ;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.child("Tests").getChildren()) {
                     //tmp[i++] = snapshot.getValue(String.class) ;
                     tmp.add(snapshot.getValue(String.class)) ;
 
@@ -98,7 +121,7 @@ public class Quiz extends AppCompatActivity {
                     stringTextView.setText(stringTextView.getText().toString() + name + " ,");
 
                 }
-                int p=(int)dataSnapshot.getChildrenCount()/6;
+                int p=(int)dataSnapshot.child("Tests").getChildrenCount()/6;
 
 
 //                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
