@@ -33,5 +33,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    def cardview_version = "1.0.0"
+
+    implementation "androidx.cardview:cardview:$cardview_version"
+
 }
 apply plugin: 'com.google.gms.google-services'
