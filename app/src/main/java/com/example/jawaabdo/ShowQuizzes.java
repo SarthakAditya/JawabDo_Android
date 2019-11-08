@@ -33,13 +33,13 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
     String courseName , uid;
     private DatabaseReference mDatabase;
     ListView list;
-    String[] courseslist ={"quiz1"};
+    String[] qlist;
     String[] quizTime={"2:14"};
     int image=R.drawable.quiz;
     Quizdata quizdata;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference CoursesRef,SingleCourseRef ;
-    ArrayList<String> names = new ArrayList<>();
+    ArrayList<String> QuizTimeList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,20 +51,38 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
         CoursesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                ArrayList<String> QuizList = new ArrayList<>();
+                qlist = null;
+                setContentView(R.layout.activity_show_quizzes);
+                list=(ListView)findViewById(R.id.quizList);
                 if (dataSnapshot.child("Tests").exists())
                 {
-                    setContentView(R.layout.activity_show_quizzes);
-                    list=(ListView)findViewById(R.id.quizList);
-                    MyAdapter2 adapter = new MyAdapter2(ShowQuizzes.this, courseslist, image,quizTime);
-                    list.setAdapter(adapter);
-                    list.setOnItemClickListener(ShowQuizzes.this);
-                    //quizdata = (Quizdata)getIntent().getSerializableExtra("Quiz_data") ;
-                    try{
-                        Log.d("xyz", getIntent().getStringExtra("Quiz_data"));}
-                    catch (Exception e){}
-                }
 
+                    for (DataSnapshot snapshot : dataSnapshot.child("Tests").getChildren()) {
+
+                        Log.d("SarthakAditya","Tests Data : " + snapshot.getKey() );
+                        QuizList.add(snapshot.getKey());
+
+                    }
+
+                    int numofcourses=QuizList.size();
+                    qlist = new String[numofcourses];
+
+                    int i=0;
+                    for(String quiz : QuizList) {
+                        qlist[i++]=quiz;
+
+                    }
+
+
+                        MyAdapter2 adapter = new MyAdapter2(ShowQuizzes.this, qlist, image,quizTime);
+                        list.setAdapter(adapter);
+                        list.setOnItemClickListener(ShowQuizzes.this);
+                        //quizdata = (Quizdata)getIntent().getSerializableExtra("Quiz_data") ;
+                        try{
+                            Log.d("xyz", getIntent().getStringExtra("Quiz_data"));}
+                        catch (Exception e){}
+                }
             }
 
             @Override
@@ -74,12 +92,14 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
         });
     }
 
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id){
+        Log.d("SarthakAditya", "Position is : "+position);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Courses").child(courseName).child("Time")
+        mDatabase.child("Courses").child(courseName).child("Time").child(qlist[position])
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<String> names = new ArrayList<>();
                         if(dataSnapshot.getChildrenCount() == 0)
                         {
                             Log.i("ashishrana","empty child code");
@@ -99,18 +119,21 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
                         int quiz_hour = Integer.parseInt(names.get(2));
                         int quiz_minute = Integer.parseInt(names.get(3));
                         int quiz_duration = Integer.parseInt(names.get(1));
+                        Log.d("SarthakAditya","current Month , day - Quiz month , day "+month+" "+day+" || "+quiz_month+" "+quiz_day);
                         if(month == quiz_month && quiz_day == day){
-                            Log.i("ashishrana","current time - month day hour minute"+month+" "+day+" "+hour+" "+minute);
+                            Log.d("SarthakAditya","current time - month day hour minute"+month+" "+day+" "+hour+" "+minute);
                             int curtime = hour*60+minute;
                             int quiztime = quiz_hour*60+quiz_minute;
                             int endtime = quiztime + quiz_duration;
-                            Log.i("ashishrana","Current Time : "+ curtime);
-                            Log.i("ashishrana","Quiz Time : "+ quiztime);
-                            Log.i("ashishrana","End Time : "+ endtime);
+                            Log.d("SarthakAditya","Current Time : "+ curtime);
+                            Log.d("SarthakAditya","Quiz Time : "+ quiztime);
+                            Log.d("SarthakAditya","End Time : "+ endtime);
                             if(curtime >= quiztime && curtime < endtime){
+                                Log.d("SarthakAditya", "Inside loop position is : "+position);
                                 Intent intent=new Intent(getApplicationContext(),Quiz.class);
                                 intent.putExtra("Cname",courseName);
                                 intent.putExtra("Userid" , uid);
+                                intent.putExtra("position" , qlist[position]);
                                 startActivity(intent);
                             }
                         }
@@ -144,12 +167,12 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
             View row = layoutInflater.inflate(R.layout.row, parent, false);
             ImageView images = row.findViewById(R.id.image);
             TextView myTitle = row.findViewById(R.id.cname);
-            TextView myDescription = row.findViewById(R.id.iname);
+            //TextView myDescription = row.findViewById(R.id.iname);
 
 //             now set our resources on views
             images.setImageResource(image);
             myTitle.setText(cnames[position]);
-            myDescription.setText(quizTimes[position]);
+            //myDescription.setText(quizTimes[0]);
 
 
 

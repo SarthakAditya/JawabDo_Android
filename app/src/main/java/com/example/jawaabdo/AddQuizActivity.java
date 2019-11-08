@@ -1,5 +1,6 @@
 package com.example.jawaabdo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -111,31 +112,45 @@ public class AddQuizActivity extends AppCompatActivity {
   //          handler.postDelayed(new Runnable() {
         //        @Override
       //          public void run() {
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                 @Override
+                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String strDate = sdf.format(calendar.getTime());
-                    Log.d("my_message",strDate + strDate.length());
-                    String[] separated = strDate.split(" ");
-                    String[] monthdate = separated[0].split("-");
-                    String[] hourmin = separated[1].split(":");
-                    String month=monthdate[1];
-                    String date=monthdate[2];
-                    String hour=hourmin[0];
-                    String min=hourmin[1];
+                     int testno = (int)dataSnapshot.child("Courses").child(courseID).child("Tests").getChildrenCount();
+
+                     Log.d("SarthakAditya"," Tests Size = " +testno );
+
+                     while (dataSnapshot.hasChild("test"+testno))
+                     {
+                         Log.d("SarthakAditya"," Exists" );
+                         testno++;
+                     }
+
+                     String pos = testno+"";
+
+                     Calendar calendar = Calendar.getInstance();
+                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                     String strDate = sdf.format(calendar.getTime());
+                     Log.d("my_message",strDate + strDate.length());
+                     String[] separated = strDate.split(" ");
+                     String[] monthdate = separated[0].split("-");
+                     String[] hourmin = separated[1].split(":");
+                     String month=monthdate[1];
+                     String date=monthdate[2];
+                     String hour=hourmin[0];
+                     String min=hourmin[1];
 
 
 
 
+                     DatabaseReference newRef = mDatabase.child("Courses").child(courseID).child("Tests");
 
-                    DatabaseReference newRef = mDatabase.child("Courses").child(courseID).child("Tests");
-
-                    mDatabase.child("Courses").child(courseID).child("Tests").child("1").setValue(q1);
-                    mDatabase.child("Courses").child(courseID).child("Tests").child("2").setValue(o1);
-                    mDatabase.child("Courses").child(courseID).child("Tests").child("3").setValue(o2);
-                    mDatabase.child("Courses").child(courseID).child("Tests").child("4").setValue(o3);
-                    mDatabase.child("Courses").child(courseID).child("Tests").child("5").setValue(o4);
-                    mDatabase.child("Courses").child(courseID).child("Tests").child("6").setValue(a1);
+                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("1").setValue(q1);
+                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("2").setValue(o1);
+                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("3").setValue(o2);
+                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("4").setValue(o3);
+                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("5").setValue(o4);
+                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("6").setValue(a1);
 
 //                    String testKey=newRef.getKey();
 //
@@ -158,16 +173,25 @@ public class AddQuizActivity extends AppCompatActivity {
 //                    newRef=mDatabase.child("Courses").child(courseID).child("Tests").child(testKey).child("Options").child(optionKeyd);
 //                    newRef.setValue(o4);
 
-                    mDatabase.child("Courses").child(courseID).child("Time").child("Date").setValue(date);
-                    mDatabase.child("Courses").child(courseID).child("Time").child("HRS").setValue(hour);
-                    mDatabase.child("Courses").child(courseID).child("Time").child("MINS").setValue((Integer.parseInt(min) +2)+"");
-                    mDatabase.child("Courses").child(courseID).child("Time").child("Month").setValue(month);
-                    mDatabase.child("Courses").child(courseID).child("Time").child("Duration").setValue("10");
+                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Date").setValue(date);
+                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("HRS").setValue(hour);
+                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("MINS").setValue((Integer.parseInt(min) +2)+"");
+                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Month").setValue(month);
+                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Duration").setValue("10");
 
 
 
 
-            Toast.makeText(getApplicationContext(),"Test Added",Toast.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(),"Test Added",Toast.LENGTH_SHORT).show();
+
+                 }
+
+                 @Override
+                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                 }
+             });
+
             //    }
           //  }, 2000);
 

@@ -53,8 +53,8 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
     DatabaseReference myRef1,CoursesRef,SingleCourseRef ;
     //    String[] instructorName={};
     int image=R.drawable.quiz;
-    ArrayList<String> names = new ArrayList<>();;
-    ArrayList<String> Instnames = new ArrayList<>();;
+    ArrayList<String> names = new ArrayList<>();
+    ArrayList<String> Instnames = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +70,7 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                names = new ArrayList<>();
 //                list.setAdapter(new MyAdapter(Courses.this,new String[0],image));
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
@@ -82,6 +83,7 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
                 CoursesRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot_C) {
+                        Instnames = new ArrayList<>();
                         for (DataSnapshot snapshot_C : dataSnapshot_C.getChildren()) {
                             for (int i=0 ; i < names.size() ; i++)
                             {
@@ -91,34 +93,30 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
                                     {
                                         Calendar current = Calendar.getInstance();
                                         Log.d("SarthakAditya","Current Time is : " + current.getTimeInMillis());
+                                        Log.d("SarthakAditya","Tests Values : " + snapshot_C.child("Time"));
 
-                                        Calendar c = Calendar.getInstance();
-                                        c=current;
-                                        c.set(Calendar.YEAR,2019);
-                                        c.set(Calendar.MONTH,(Integer.parseInt(snapshot_C.child("Time").child("Month").getValue().toString()))-1);
-                                        c.set(Calendar.DATE,Integer.parseInt(snapshot_C.child("Time").child("Date").getValue().toString()));
-                                        c.set(Calendar.HOUR_OF_DAY,Integer.parseInt(snapshot_C.child("Time").child("HRS").getValue().toString()));
-                                        c.set(Calendar.MINUTE,Integer.parseInt(snapshot_C.child("Time").child("MINS").getValue().toString()));
+                                        for (DataSnapshot tests : snapshot_C.child("Time").getChildren())
+                                        {
+                                            Calendar c = Calendar.getInstance();
+                                            c.set(Calendar.YEAR,2019);
+                                            c.set(Calendar.MONTH,(Integer.parseInt(snapshot_C.child("Time").child(tests.getKey()).child("Month").getValue().toString()))-1);
+                                            c.set(Calendar.DATE,Integer.parseInt(snapshot_C.child("Time").child(tests.getKey()).child("Date").getValue().toString()));
+                                            c.set(Calendar.HOUR_OF_DAY,Integer.parseInt(snapshot_C.child("Time").child(tests.getKey()).child("HRS").getValue().toString()));
+                                            c.set(Calendar.MINUTE,Integer.parseInt(snapshot_C.child("Time").child(tests.getKey()).child("MINS").getValue().toString()));
 
-                                        Log.d("SarthakAditya","Notification To be Launched at : " + c.getTimeInMillis());
+                                            Log.d("SarthakAditya","Notification To be Launched at : " + c.getTimeInMillis());
 
-                                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                                        Intent intent = new Intent(Courses.this,AlertReceiver.class);
-                                        intent.putExtra("courseID",snapshot_C.getKey().toString());
-                                        PendingIntent alarmintent = PendingIntent.getBroadcast(Courses.this,1, intent,0);
+                                            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                            Intent intent = new Intent(Courses.this,AlertReceiver.class);
+                                            intent.putExtra("courseID",snapshot_C.getKey().toString());
+                                            intent.putExtra("Message",snapshot_C.getKey().toString());
+                                            intent.putExtra("channel",snapshot_C.getKey().toString());
+                                            PendingIntent alarmintent = PendingIntent.getBroadcast(Courses.this,1, intent,0);
 
-                                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), alarmintent);
+                                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), alarmintent);
+                                        }
 
-                                        /*Intent intent = new Intent(Courses.this,AlertReceiver.class);
-                                        intent.putExtra("courseID",snapshot_C.getKey().toString());
-
-                                        PendingIntent alarmintent = PendingIntent.getBroadcast(Courses.this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-
-                                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                                        long alarmstarttime = c.getTimeInMillis();
-                                        alarmManager.set(AlarmManager.RTC_WAKEUP,alarmstarttime,alarmintent);
-
-                                        Toast.makeText(getApplicationContext(), "Notification Set", Toast.LENGTH_SHORT).show();*/
+                                       /* */
 
                                     }
                                     else

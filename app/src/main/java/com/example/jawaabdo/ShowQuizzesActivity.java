@@ -23,20 +23,21 @@ public class ShowQuizzesActivity extends AppCompatActivity {
    private DatabaseReference mDatabase;
     String userID;
     String courseID;
+    int totalquiz = 0;
     TextView dp2;
     ArrayList<String> names;
     TextView quizInfo;
     Button addQuiz;
-//    Button[] btnWord;
-//    LinearLayout linear;
+    Button[] btnWord;
+    LinearLayout linear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_quizzes2);
         dp2 = findViewById(R.id.noQuizzesTextView);
         addQuiz = findViewById(R.id.addQuizButton);
-        quizInfo = findViewById(R.id.quizInfo);
-        quizInfo.setVisibility(View.GONE);
+//        quizInfo = findViewById(R.id.quizInfo);
+//        quizInfo.setVisibility(View.GONE);
         dp2.setVisibility(View.GONE);
         userID = getIntent().getStringExtra("EXTRA_USER_ID");
       // courseID="MC";
@@ -54,14 +55,14 @@ public class ShowQuizzesActivity extends AppCompatActivity {
 
     }
 
-//    View.OnClickListener btnClicked = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            Object tag = v.getTag();
-//            Log.d("my_message","In_show_quiz" +tag.toString());
-//            //Toast.makeText(getApplicationContext(), "clicked button", Toast.LENGTH_SHORT).show();
-//            updateQuiz((int)tag);
-//        }};
+    View.OnClickListener btnClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Object tag = v.getTag();
+            Log.d("my_message","In_show_quiz" +tag.toString());
+            //Toast.makeText(getApplicationContext(), "clicked button", Toast.LENGTH_SHORT).show();
+            updateQuiz((int)tag);
+        }};
 
 
     private void showQuizzes()
@@ -88,21 +89,22 @@ public class ShowQuizzesActivity extends AppCompatActivity {
 
                         else
                         {
-                            quizInfo.setText("Quiz 1");
-                            quizInfo.setVisibility(View.VISIBLE);
-                            addQuiz.setVisibility(View.GONE);
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                Log.d("my_message", "In_show_quiz" +snapshot.toString() + "more_than_1_child");
-//                                String name = snapshot.getKey();
-//                                names.add(name);
-//                            }
-//
-////                        for(String name : names) {
-////                            TextView stringTextView = (TextView) findViewById(R.id.showQuizzesTextView);
-////                            stringTextView.setText(stringTextView.getText().toString() + name + " , ");
-////                        }
-////                         //   Log.d("my_message", "In_show_quiz" );
-//
+//                            quizInfo.setText("Quiz 1");
+//                            quizInfo.setVisibility(View.VISIBLE);
+//                            addQuiz.setVisibility(View.GONE);
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Log.d("SarthakAditya", "In_show_quiz" +snapshot.toString() + "more_than_1_child");
+                                String name = snapshot.getKey();
+                                names.add(name);
+                            }
+
+                        for(String name : names) {
+                            TextView stringTextView = (TextView) findViewById(R.id.showQuizzesTextView);
+                            stringTextView.setText(stringTextView.getText().toString() + name + " , ");
+                        }
+                         //   Log.d("my_message", "In_show_quiz" );
+
                         }
                     }
                     @Override
@@ -112,33 +114,33 @@ public class ShowQuizzesActivity extends AppCompatActivity {
                 });
 
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                TextView stringTextView = (TextView) findViewById(R.id.showQuizzesTextView);
-//                String courses=stringTextView.getText().toString();
-//
-//                String[] separated = courses.split(" ,");
-//                Log.d("my_message","In_show_quiz" +""+separated.length);
-//
-//
-//                btnWord=new Button[separated.length-1];
-//                linear = (LinearLayout) findViewById(R.id.linear1);
-//                Log.d("my_message","In_show_quiz" +"" +btnWord.length);
-//                for (int i = 0; i < btnWord.length; i++) {
-//
-//                    btnWord[i] = new Button(getApplicationContext());
-//                    btnWord[i].setHeight(50);
-//                    btnWord[i].setWidth(50);
-//                    btnWord[i].setTag(i);
-//                    btnWord[i].setOnClickListener(btnClicked);
-//                    btnWord[i].setText(separated[i]);
-//                    linear.addView(btnWord[i]);
-//                }
-//
-//            }
-//        }, 2000);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TextView stringTextView = (TextView) findViewById(R.id.showQuizzesTextView);
+                String courses=stringTextView.getText().toString();
+
+                String[] separated = courses.split(" ,");
+                Log.d("my_message","In_show_quiz" +""+separated.length);
+
+
+                btnWord=new Button[separated.length-1];
+                linear = (LinearLayout) findViewById(R.id.linear1);
+                Log.d("my_message","In_show_quiz" +"" +btnWord.length);
+                for (int i = 0; i < btnWord.length; i++) {
+
+                    btnWord[i] = new Button(getApplicationContext());
+                    btnWord[i].setHeight(50);
+                    btnWord[i].setWidth(50);
+                    btnWord[i].setTag(i);
+                    btnWord[i].setOnClickListener(btnClicked);
+                    btnWord[i].setText(separated[i]);
+                    linear.addView(btnWord[i]);
+                }
+
+            }
+        }, 2000);
 
 
 
@@ -159,19 +161,19 @@ public class ShowQuizzesActivity extends AppCompatActivity {
 
     }
 
-//    public void updateQuiz(int tag)
-//    {
-//        TextView stringTextView = (TextView) findViewById(R.id.showQuizzesTextView);
-//        String courses=stringTextView.getText().toString();
-//        //Log.d("my_message","here");
-//        String[] separated = courses.split(" ,");
-//        Intent intent=new Intent(this,UpdateQuizActivity.class);
-//        intent.putExtra("EXTRA_USER_ID", userID);
-//        intent.putExtra("EXTRA_COURSE_ID", courseID);
-//        intent.putExtra("EXTRA_QUIZ_ID",separated[tag]);
-//        Log.d("my_message",separated[tag].length() + "" + separated[tag]);
-//        startActivity(intent);
-//    }
+    public void updateQuiz(int tag)
+    {
+        TextView stringTextView = (TextView) findViewById(R.id.showQuizzesTextView);
+        String courses=stringTextView.getText().toString();
+        //Log.d("my_message","here");
+        String[] separated = courses.split(" ,");
+        Intent intent=new Intent(this,UpdateQuizActivity.class);
+        intent.putExtra("EXTRA_USER_ID", userID);
+        intent.putExtra("EXTRA_COURSE_ID", courseID);
+        intent.putExtra("EXTRA_QUIZ_ID",separated[tag]);
+        Log.d("my_message",separated[tag].length() + "" + separated[tag]);
+        startActivity(intent);
+    }
 }
 
 

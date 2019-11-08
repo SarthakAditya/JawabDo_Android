@@ -15,10 +15,13 @@ public class AlertReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         String courseID = intent.getStringExtra("courseID");
+        String Message = intent.getStringExtra("Message");
+        String channel = intent.getStringExtra("channel");
         Log.d("SarthakAditya", "Course ID : "+courseID);
+        Log.d("SarthakAditya", "Message ID : "+Message);
 
         NotificationHelper notificationHelper = new NotificationHelper(context);
-        NotificationCompat.Builder nb = notificationHelper.getChannel1Notification(courseID,"Test is active");
+        NotificationCompat.Builder nb = notificationHelper.getChannel1Notification(courseID,Message+" is active",channel);
         notificationHelper.getmManager().notify(1,nb.build());
     }
 }

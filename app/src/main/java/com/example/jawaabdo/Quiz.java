@@ -28,7 +28,7 @@ public class Quiz extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef ;
     Quizdata quizdata=new Quizdata();
-    String courseName , uid;
+    String courseName , uid , position;
     CountDownTimer ct;
     Button next;
     Button submit;
@@ -52,6 +52,7 @@ public class Quiz extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
         courseName=getIntent().getStringExtra("Cname");
         uid = getIntent().getStringExtra("Userid") ;
+        position = getIntent().getStringExtra("position") ;
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -69,17 +70,17 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                int duration = Integer.parseInt(dataSnapshot.child("Time").child("Duration").getValue().toString());
+                int duration = Integer.parseInt(dataSnapshot.child("Time").child(position).child("Duration").getValue().toString());
 
                 Calendar cal = Calendar.getInstance();
                 int month = cal.get(Calendar.MONTH) + 1;
                 int day = cal.get(Calendar.DATE);
                 int hour = cal.get(Calendar.HOUR_OF_DAY);
                 int minute = cal.get(Calendar.MINUTE);
-                int quiz_month = Integer.parseInt(dataSnapshot.child("Time").child("Month").getValue().toString());
-                int quiz_day = Integer.parseInt(dataSnapshot.child("Time").child("Date").getValue().toString());
-                int quiz_hour = Integer.parseInt(dataSnapshot.child("Time").child("HRS").getValue().toString());
-                int quiz_minute = Integer.parseInt(dataSnapshot.child("Time").child("MINS").getValue().toString());
+                int quiz_month = Integer.parseInt(dataSnapshot.child("Time").child(position).child("Month").getValue().toString());
+                int quiz_day = Integer.parseInt(dataSnapshot.child("Time").child(position).child("Date").getValue().toString());
+                int quiz_hour = Integer.parseInt(dataSnapshot.child("Time").child(position).child("HRS").getValue().toString());
+                int quiz_minute = Integer.parseInt(dataSnapshot.child("Time").child(position).child("MINS").getValue().toString());
 
                 int curtime = hour*60+minute;
                 int quiztime = quiz_hour*60+quiz_minute;
@@ -109,7 +110,7 @@ public class Quiz extends AppCompatActivity {
                 //String tmp[] = new String[(int)dataSnapshot.getChildrenCount()] ;
                 ArrayList<String> tmp = new ArrayList<>() ;
                 int i = 0 ;
-                for (DataSnapshot snapshot : dataSnapshot.child("Tests").getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.child("Tests").child(position).getChildren()) {
                     //tmp[i++] = snapshot.getValue(String.class) ;
                     tmp.add(snapshot.getValue(String.class)) ;
 
@@ -155,7 +156,7 @@ public class Quiz extends AppCompatActivity {
 //                viewopt1.setText(option[0][0]);
 //                viewopt2.setText(option[0][1]);
 //                viewopt3.setText(option[0][2]);
-//                viewopt4.setText(option[0][3]);
+//                viewopt4.setText(option[0][3]);*/
 
             }
 
@@ -253,7 +254,7 @@ public class Quiz extends AppCompatActivity {
     }
     public void showResult(){
         myRef = database.getReference("Users/" + uid) ;
-        myRef.child(courseName + " score").setValue(score + "") ;
+        myRef.child(courseName).child("test"+position).setValue(score + "") ;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
         builder.setIcon(R.mipmap.ic_launcher);

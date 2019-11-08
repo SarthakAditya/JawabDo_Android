@@ -42,14 +42,13 @@ public class UpdateQuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_quiz);
 
-        //userID = getIntent().getStringExtra("EXTRA_USER_ID");
+        userID = getIntent().getStringExtra("EXTRA_USER_ID");
         // courseID="MC";
         courseID=getIntent().getStringExtra("EXTRA_COURSE_ID");
-        //quizID=getIntent().getStringExtra("EXTRA_QUIZ_ID");
-
+        quizID=getIntent().getStringExtra("EXTRA_QUIZ_ID");
   //      Log.d("my_message","User_ID " + userID);
-//        Log.d("my_message","Course_ID " + courseID);
-    //    Log.d("my_message","Quiz_ID " + quizID);
+        Log.d("my_message","Course_ID " + courseID);
+        Log.d("my_message","Quiz_ID " + quizID);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         flag=1;
         flag1=0;
@@ -60,7 +59,7 @@ public class UpdateQuizActivity extends AppCompatActivity {
 
         flag=0;
 
-        DatabaseReference newRef = mDatabase.child("Courses").child(courseID).child("Time");
+        DatabaseReference newRef = mDatabase.child("Courses").child(courseID).child("Time").child(quizID);
 
 
         Calendar calendar = Calendar.getInstance();
@@ -197,9 +196,11 @@ public class UpdateQuizActivity extends AppCompatActivity {
     {
         // delete quiz from firebase
         flag=1;
-        mDatabase.child("Courses").child(courseID).child("Tests").removeValue();
-        mDatabase.child("Courses").child(courseID).child("Time").removeValue();
+        mDatabase.child("Courses").child(courseID).child("Tests").child(quizID).removeValue();
+        mDatabase.child("Courses").child(courseID).child("Time").child(quizID).removeValue();
         Toast.makeText(getApplicationContext(),"Quiz cancelled",Toast.LENGTH_SHORT).show();
+
+
 
     }
 
