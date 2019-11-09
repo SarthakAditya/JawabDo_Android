@@ -146,37 +146,6 @@ public class ShowCoursesActivity extends AppCompatActivity {
                     }
                 });
 
-
-//        if(noCourses==1) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    TextView stringTextView = (TextView) findViewById(R.id.showCoursesTextView);
-//                    String courses = stringTextView.getText().toString();
-//
-//                    String[] separated = courses.split(" ,");
-//                    Log.d("my_message", "" + separated.length);
-//
-//
-//                    btnWord = new Button[separated.length];
-//                    linear = (LinearLayout) findViewById(R.id.linear);
-//                    Log.d("my_message", "" + btnWord.length);
-//                    for (int i = 0; i < btnWord.length; i++) {
-//
-//                        btnWord[i] = new Button(getApplicationContext());
-//                        btnWord[i].setHeight(50);
-//                        btnWord[i].setWidth(50);
-//                        btnWord[i].setTag(i);
-//                        btnWord[i].setOnClickListener(btnClicked);
-//                        btnWord[i].setText(separated[i]);
-//                        linear.addView(btnWord[i]);
-//                    }
-//                }
-//            }, 2000);
-//
-//        }
-
     }
 
 

@@ -11,24 +11,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-//import com.example.jawaabdo.LoginActivity;
-import com.example.jawaabdo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
+
     RadioGroup loginasrg;
-    String userType ;
-    Button Register;
+    String uT ;
+    boolean succesful=false;
+    Button login;
     EditText emailField;
+    String userType;
     EditText passwordField;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -37,88 +40,87 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        firebaseAuth = FirebaseAuth.getInstance();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String uT = pref.getString("a","");
-        String userId = pref.getString("b","");
-        Log.i("ashishrana","sharedprefereces stored - "+uT+"  "+userId);
-        if(uT.equals("F") ){
-            Intent intent = new Intent(MainActivity.this, Courses.class);
-            intent.putExtra("userid",userId);
-            startActivity(intent);
-        }
-        else if(uT.equals("T")){
-            Intent intent = new Intent(MainActivity.this, ShowCoursesActivity.class);
-            Log.d("my_message","user id is login is "+userId);
-            intent.putExtra("EXTRA_USER_ID",userId);
-            startActivity(intent);
-        }
-        loginasrg=(RadioGroup)findViewById(R.id.loginasrg);
-        loginasrg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // checkedId is the RadioButton selected
-                RadioButton temp=(RadioButton)findViewById(checkedId);
-                if(temp.getText().equals("Student"))
-                    userType="F";
-                else
-                    userType="T";
-            }
-        });
-
-
     }
-    public void Reg(View view){
-        Register = findViewById(R.id.Register);
-        emailField = findViewById(R.id.emailSignUp);
-        passwordField = findViewById(R.id.passSignUp);
+    public void loginUser(View view){
+        login = findViewById(R.id.loginButton);
+        emailField = findViewById(R.id.emailText);
+        passwordField = findViewById(R.id.PasswordText);
         firebaseAuth = FirebaseAuth.getInstance();
         String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+
+
+        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                myRef = database.getReference("Users/" + firebaseAuth.getCurrentUser().getUid()) ;
-                                myRef.child("Name").setValue("Deepak Malik") ;
-                                myRef.child("Roll_no").setValue("2016031") ;
-                                myRef.child("Faculty").setValue(userType) ;
-                                Toast toast=Toast.makeText(getApplicationContext(),"User Registered, Verify email please",Toast.LENGTH_SHORT);
-                                toast.show();
+                    if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                        final String user_id = firebaseAuth.getCurrentUser().getUid() ;
+//                        String user_id = "ha72sHHOFhhxdjeAMGbGaweo2Ax1" ;
+                        myRef = database.getReference("Users/" + user_id + "/Faculty");
+                        //myRef = database.getReference("Courses/DIP/Name");
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                uT = dataSnapshot.getValue(String.class) ;
+                                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("a",uT);
+                                editor.putString("b",user_id);
+                                editor.commit();
+                                String ashish = pref.getString("uT","");
+                                String rana = pref.getString("userid","");
+                                Log.i("ashishrana" ,"sharedpref in login is "+ashish+"  "+rana) ;
+                                Log.i("ashishrana" ,"in login activity ut is "+uT) ;
+                                if(uT.equals("F") ){
+                                    Intent intent = new Intent(MainActivity.this, Courses.class);
+                                    intent.putExtra("userid",user_id);
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Intent intent = new Intent(MainActivity.this, ShowCoursesActivity.class);
+                                    Log.d("my_message","user id is login is "+user_id);
+                                    intent.putExtra("EXTRA_USER_ID",user_id);
+                                    startActivity(intent);
+                                }
+
                             }
-                            else{
-                                Log.i("ashish","failed in verification");
-                                Toast toast=Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT);
-                                toast.show();
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
-                        }
-                    });
-                    Toast toast=Toast.makeText(getApplicationContext(),"User Registered",Toast.LENGTH_SHORT);
-                    toast.show();
+
+                        });
+                        Toast toast=Toast.makeText(getApplicationContext(),"User verified and Logged in",Toast.LENGTH_SHORT);
+                        toast.show();
+                        succesful = true ;
+
+                    }
+                    else{
+                        Toast toast=Toast.makeText(getApplicationContext(),"Not Verified",Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                 }
                 else{
-                    Toast toast=Toast.makeText(getApplicationContext(),"failed "+task.getException().getMessage(),Toast.LENGTH_SHORT);
+                    Toast toast=Toast.makeText(getApplicationContext(),"failed",Toast.LENGTH_SHORT);
                     toast.show();
-                    Log.i("ashish",task.getException().getMessage());
                 }
+
             }
         });
-        /*
-         */
-    }
+        /*if(succesful) {
+            Intent intent = new Intent(this, Courses.class);
+            startActivity(intent);
+        //}*/
 
-    public void add_user_todatabase(){
+}
 
-    }
-
-    public  void login(View view){
-        Intent intent = new Intent(this, com.example.jawaabdo.LoginActivity.class);
+public void register(View view){
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
+
+
 
 }

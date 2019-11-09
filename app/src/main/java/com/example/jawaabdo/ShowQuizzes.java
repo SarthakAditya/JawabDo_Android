@@ -35,7 +35,7 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
     ListView list;
     String[] qlist;
     String[] quizTime={"2:14"};
-    int image=R.drawable.quiz;
+    int image=R.drawable.exam;
     Quizdata quizdata;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference CoursesRef,SingleCourseRef ;
@@ -167,12 +167,12 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
             View row = layoutInflater.inflate(R.layout.row, parent, false);
             ImageView images = row.findViewById(R.id.image);
             TextView myTitle = row.findViewById(R.id.cname);
-            //TextView myDescription = row.findViewById(R.id.iname);
+            TextView myDescription = row.findViewById(R.id.iname);
 
 //             now set our resources on views
             images.setImageResource(image);
             myTitle.setText(cnames[position]);
-            //myDescription.setText(quizTimes[0]);
+            myDescription.setText(courseName);
 
 
 

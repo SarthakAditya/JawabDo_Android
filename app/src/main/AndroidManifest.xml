@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".Quiz" />
         <activity android:name=".Courses" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".UpdateQuizActivity"></activity>
         <activity android:name=".AddQuizActivity" />
         <activity android:name=".ShowQuizzesActivity" />

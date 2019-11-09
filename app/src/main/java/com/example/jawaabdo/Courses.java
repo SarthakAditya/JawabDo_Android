@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -52,7 +53,7 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
     FirebaseDatabase database1 = FirebaseDatabase.getInstance();
     DatabaseReference myRef1,CoursesRef,SingleCourseRef ;
     //    String[] instructorName={};
-    int image=R.drawable.quiz;
+    int image=R.drawable.teacher;
     ArrayList<String> names = new ArrayList<>();
     ArrayList<String> Instnames = new ArrayList<>();
     @Override
@@ -232,7 +233,10 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
         });
 
     }
-    public void onItemClick(AdapterView<?>parent,View view,int position,long id){
+
+
+
+    public void onItemClick(AdapterView<?>parent, View view, int position, long id){
 
 
         //Log.i("abcd" , quizdata.options[0][1]) ;

@@ -1,126 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <Button
-        android:id="@+id/Register"
-        android:layout_width="120dp"
-        android:layout_height="65dp"
-        android:background="@android:color/holo_orange_dark"
-        android:onClick="Reg"
-        android:text="SIgnUp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.477"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.605" />
-
-    <Button
-        android:id="@+id/SignIn"
-        android:layout_width="114dp"
-        android:layout_height="62dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/holo_orange_dark"
-        android:onClick="login"
-        android:text="SignIn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.468"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.848" />
-
-    <EditText
-        android:id="@+id/emailSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:backgroundTint="@android:color/holo_orange_dark"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="Email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/passSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@android:color/holo_orange_dark"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:hint="Paswword"
-        app:layout_constraintBottom_toTopOf="@+id/Register"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailSignUp"
-        app:layout_constraintVertical_bias="0.146" />
+    android:layout_centerHorizontal="true"
+    android:gravity="center"
+    android:layout_centerVertical="true"
+    tools:context=".RegisterActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/HEAD"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="176dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="177dp"
-        android:layout_marginBottom="54dp"
-        android:text="Already a user? Log in here."
-        app:layout_constraintBottom_toTopOf="@+id/SignIn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Register"
-        app:layout_constraintVertical_bias="0.0" />
+        android:text="Jawab Do" />
 
-    <RadioGroup
-        android:id="@+id/loginasrg"
-        android:layout_width="222dp"
-        android:layout_height="86dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.519">
-
-        <RadioButton
-            android:id="@+id/loginasstudent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Student" />
-
-        <RadioButton
-            android:id="@+id/loginasinstructor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Instructor" />
-    </RadioGroup>
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@+id/HEAD"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@drawable/test" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/emailText"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_person"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="80dp"
+        android:background="#11000000"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
+        android:hint="Email Id"
+        android:textAlignment="center"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/imageView3"/>
+
+    <EditText
+        android:id="@+id/PasswordText"
+        android:drawableLeft="@drawable/ic_password"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20sp"
+        android:textAlignment="center"
+        android:background="#11000000"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:ems="10"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:layout_below="@id/emailText"/>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/button_rectangle_green"
+        android:layout_centerHorizontal="true"
+        android:onClick="loginUser"
+        android:textSize="20sp"
+        android:text="Login"
+        android:textColorLink="@android:color/holo_green_dark"
+        android:textCursorDrawable="@drawable/common_google_signin_btn_icon_dark_normal_background"
+        android:layout_below="@+id/PasswordText"/>
+
+    <TextView
+        android:id="@+id/Register_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:layout_marginEnd="8dp"
-        android:background="@null"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Who you are?"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/loginasrg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_below="@id/loginButton"
+        android:onClick="register"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:text="Register" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
+
+
+
+
+
+
+
+
