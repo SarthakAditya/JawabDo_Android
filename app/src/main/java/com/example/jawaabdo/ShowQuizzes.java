@@ -75,13 +75,13 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
                     }
 
 
-                        MyAdapter2 adapter = new MyAdapter2(ShowQuizzes.this, qlist, image,quizTime);
-                        list.setAdapter(adapter);
-                        list.setOnItemClickListener(ShowQuizzes.this);
-                        //quizdata = (Quizdata)getIntent().getSerializableExtra("Quiz_data") ;
-                        try{
-                            Log.d("xyz", getIntent().getStringExtra("Quiz_data"));}
-                        catch (Exception e){}
+                    MyAdapter2 adapter = new MyAdapter2(ShowQuizzes.this, qlist, image,quizTime);
+                    list.setAdapter(adapter);
+                    list.setOnItemClickListener(ShowQuizzes.this);
+                    //quizdata = (Quizdata)getIntent().getSerializableExtra("Quiz_data") ;
+                    try{
+                        Log.d("xyz", getIntent().getStringExtra("Quiz_data"));}
+                    catch (Exception e){}
                 }
             }
 

@@ -77,7 +77,7 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
                 // whenever data at this location is updated.
                 CoursesRef = database.getReference("Courses/");
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String name = snapshot.getValue(String.class);
+                    String name = snapshot.getKey();
                     names.add(name);
                 }
 

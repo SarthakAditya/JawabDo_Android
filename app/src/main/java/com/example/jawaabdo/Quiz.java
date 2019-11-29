@@ -253,8 +253,8 @@ public class Quiz extends AppCompatActivity {
         showNextQuestion();
     }
     public void showResult(){
-        myRef = database.getReference("Users/" + uid) ;
-        myRef.child(courseName).child("test"+position).setValue(score + "") ;
+        myRef = database.getReference("Users/" + uid + "/Courses/") ;
+        myRef.child(courseName).child(position).setValue(score + "") ;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
         builder.setIcon(R.mipmap.ic_launcher);
