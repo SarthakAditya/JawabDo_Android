@@ -46,7 +46,7 @@ public class UpdateQuizActivity extends AppCompatActivity {
         // courseID="MC";
         courseID=getIntent().getStringExtra("EXTRA_COURSE_ID");
         quizID=getIntent().getStringExtra("EXTRA_QUIZ_ID");
-  //      Log.d("my_message","User_ID " + userID);
+        //      Log.d("my_message","User_ID " + userID);
         Log.d("my_message","Course_ID " + courseID);
         Log.d("my_message","Quiz_ID " + quizID);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -187,6 +187,7 @@ public class UpdateQuizActivity extends AppCompatActivity {
 
 
 
+        finish();
 
 
         // change quiz timings in firebase
@@ -199,6 +200,7 @@ public class UpdateQuizActivity extends AppCompatActivity {
         mDatabase.child("Courses").child(courseID).child("Tests").child(quizID).removeValue();
         mDatabase.child("Courses").child(courseID).child("Time").child(quizID).removeValue();
         Toast.makeText(getApplicationContext(),"Quiz cancelled",Toast.LENGTH_SHORT).show();
+        finish();
 
 
 

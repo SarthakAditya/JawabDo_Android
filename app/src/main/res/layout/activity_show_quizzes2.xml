@@ -7,16 +7,17 @@
     android:gravity="center"
     tools:context=".ShowQuizzes">
 
-    <TextView
-        android:id="@+id/IquizesHead"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quiz" />
-
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:text=""
+    android:textColor="#000"
+    android:textStyle="bold"
+    android:layout_margin="5dp"
+    android:textSize="20sp"
+    android:id="@+id/Title"
+    />
     <TextView
         android:id="@+id/noQuizzesTextView"
         android:layout_width="wrap_content"
@@ -25,35 +26,30 @@
         android:layout_centerVertical="true"
         android:text="@string/noQuiz" />
 
-    <LinearLayout
-        android:id="@+id/linear1"
+    <ListView
+        android:id="@+id/quizList2"
         android:layout_width="351dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:layout_below="@id/IquizesHead"
+        android:layout_below="@+id/Title"
+        android:layout_above="@+id/addQuizButton"
         android:orientation="vertical">
 
-    </LinearLayout>
+    </ListView>
 
     <Button
         android:id="@+id/addQuizButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/linear1"
-        android:layout_alignRight="@+id/linear1"
+
+
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+
         android:onClick="addQuiz"
         android:text="@string/addQuiz" />
-
-    <TextView
-        android:id="@+id/showQuizzesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-
-
 
 
 </RelativeLayout>

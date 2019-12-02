@@ -56,25 +56,25 @@ public class AddQuizActivity extends AppCompatActivity {
 
         final EditText ques1EditText = (EditText) findViewById(R.id.q1);
 
-         q1 = ques1EditText.getText().toString();
+        q1 = ques1EditText.getText().toString();
 
         final EditText ans1EditText = (EditText) findViewById(R.id.a1);
 
-         a1 = ans1EditText.getText().toString();
+        a1 = ans1EditText.getText().toString();
 
         final EditText opt1EditText = (EditText) findViewById(R.id.o1);
 
-         o1 = opt1EditText.getText().toString();
+        o1 = opt1EditText.getText().toString();
 
         final EditText opt2EditText = (EditText) findViewById(R.id.o2);
 
-         o2 = opt2EditText.getText().toString();
+        o2 = opt2EditText.getText().toString();
         final EditText opt3EditText = (EditText) findViewById(R.id.o3);
 
-         o3 = opt3EditText.getText().toString();
+        o3 = opt3EditText.getText().toString();
         final EditText opt4EditText = (EditText) findViewById(R.id.o4);
 
-         o4 = opt4EditText.getText().toString();
+        o4 = opt4EditText.getText().toString();
 
         if(q1.length()==0)
         {
@@ -107,50 +107,50 @@ public class AddQuizActivity extends AppCompatActivity {
         {
             // check for test0 here and delete if necessary
 
-    //        flag=1;
+            //        flag=1;
 //            Handler handler = new Handler();
-  //          handler.postDelayed(new Runnable() {
-        //        @Override
-      //          public void run() {
+            //          handler.postDelayed(new Runnable() {
+            //        @Override
+            //          public void run() {
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                 @Override
-                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                     int testno = (int)dataSnapshot.child("Courses").child(courseID).child("Tests").getChildrenCount();
+                    int testno = (int)dataSnapshot.child("Courses").child(courseID).child("Tests").getChildrenCount();
 
-                     Log.d("SarthakAditya"," Tests Size = " +testno );
+                    Log.d("SarthakAditya"," Tests Size = " +testno );
 
-                     while (dataSnapshot.hasChild("test"+testno))
-                     {
-                         Log.d("SarthakAditya"," Exists" );
-                         testno++;
-                     }
+                    while (dataSnapshot.hasChild("test"+testno))
+                    {
+                        Log.d("SarthakAditya"," Exists" );
+                        testno++;
+                    }
 
-                     String pos = testno+"";
+                    String pos = testno+"";
 
-                     Calendar calendar = Calendar.getInstance();
-                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                     String strDate = sdf.format(calendar.getTime());
-                     Log.d("my_message",strDate + strDate.length());
-                     String[] separated = strDate.split(" ");
-                     String[] monthdate = separated[0].split("-");
-                     String[] hourmin = separated[1].split(":");
-                     String month=monthdate[1];
-                     String date=monthdate[2];
-                     String hour=hourmin[0];
-                     String min=hourmin[1];
-
-
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String strDate = sdf.format(calendar.getTime());
+                    Log.d("my_message",strDate + strDate.length());
+                    String[] separated = strDate.split(" ");
+                    String[] monthdate = separated[0].split("-");
+                    String[] hourmin = separated[1].split(":");
+                    String month=monthdate[1];
+                    String date=monthdate[2];
+                    String hour=hourmin[0];
+                    String min=hourmin[1];
 
 
-                     DatabaseReference newRef = mDatabase.child("Courses").child(courseID).child("Tests");
 
-                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("1").setValue(q1);
-                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("2").setValue(o1);
-                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("3").setValue(o2);
-                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("4").setValue(o3);
-                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("5").setValue(o4);
-                     mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("6").setValue(a1);
+
+                    DatabaseReference newRef = mDatabase.child("Courses").child(courseID).child("Tests");
+
+                    mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("1").setValue(q1);
+                    mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("2").setValue(o1);
+                    mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("3").setValue(o2);
+                    mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("4").setValue(o3);
+                    mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("5").setValue(o4);
+                    mDatabase.child("Courses").child(courseID).child("Tests").child("test"+pos).child("6").setValue(a1);
 
 //                    String testKey=newRef.getKey();
 //
@@ -173,27 +173,28 @@ public class AddQuizActivity extends AppCompatActivity {
 //                    newRef=mDatabase.child("Courses").child(courseID).child("Tests").child(testKey).child("Options").child(optionKeyd);
 //                    newRef.setValue(o4);
 
-                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Date").setValue(date);
-                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("HRS").setValue(hour);
-                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("MINS").setValue((Integer.parseInt(min) +2)+"");
-                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Month").setValue(month);
-                     mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Duration").setValue("10");
+                    mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Date").setValue(date);
+                    mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("HRS").setValue(hour);
+                    mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("MINS").setValue((Integer.parseInt(min) +2)+"");
+                    mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Month").setValue(month);
+                    mDatabase.child("Courses").child(courseID).child("Time").child("test"+testno).child("Duration").setValue("10");
 
 
 
 
-                     Toast.makeText(getApplicationContext(),"Test Added",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Test Added",Toast.LENGTH_SHORT).show();
+                    finish();
 
-                 }
+                }
 
-                 @Override
-                 public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                 }
-             });
+                }
+            });
 
             //    }
-          //  }, 2000);
+            //  }, 2000);
 
 
 
@@ -207,4 +208,3 @@ public class AddQuizActivity extends AppCompatActivity {
 
 
 }
-

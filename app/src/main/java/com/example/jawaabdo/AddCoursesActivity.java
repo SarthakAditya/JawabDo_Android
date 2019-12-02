@@ -36,15 +36,11 @@ public class AddCoursesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_courses);
         userID = getIntent().getStringExtra("EXTRA_USER_ID");
-
     }
 
     @Override
-    protected void onResume()
-    {
-
+    protected void onResume() {
         super.onResume();
-
     }
 
 
@@ -61,11 +57,11 @@ public class AddCoursesActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                String name = snapshot.getKey();
-                                coursesMap.add(name);
-                            }
+                            String name = snapshot.getKey();
+                            coursesMap.add(name);
+                        }
                         final EditText editTextCourseName = (EditText) findViewById(R.id.courseNameText);
 
 
@@ -120,6 +116,8 @@ public class AddCoursesActivity extends AppCompatActivity {
                             //startActivity(intent);
 
                         }
+
+                        finish();
 
                     }
                     @Override

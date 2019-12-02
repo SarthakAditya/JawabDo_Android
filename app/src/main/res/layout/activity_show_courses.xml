@@ -9,15 +9,6 @@
 
 
     <TextView
-        android:id="@+id/IcourseHead"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Courses" />
-
-    <TextView
         android:id="@+id/noCoursesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,17 +16,17 @@
         android:layout_centerVertical="true"
         android:text="@string/noCourse"/>
 
-    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_below="@id/IcourseHead"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_width="351dp"
+    <ListView
+        android:id="@+id/coursesList2"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:orientation="vertical">
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:divider="@android:color/transparent"
+        android:layout_above="@+id/confirmAddCourseButton"
+        android:dividerHeight="10.0sp"
+        android:scrollbars="none"/>
 
-    </LinearLayout>
 
     <Button
         android:id="@+id/confirmAddCourseButton"
@@ -43,15 +34,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:onClick="addCourses"
-        android:layout_alignRight="@+id/linear"
-        android:layout_below="@+id/linear"
+        android:layout_alignParentEnd="true"
+
+        android:layout_above="@+id/button2"
         android:text="@string/addCourses" />
 
-
-    <TextView
-        android:id="@+id/showCoursesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/button2"
@@ -60,7 +47,7 @@
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true"
         android:onClick="logout"
-        android:layout_below="@+id/confirmAddCourseButton"
+        android:layout_alignParentBottom="true"
         android:text="Logout" />
 
 

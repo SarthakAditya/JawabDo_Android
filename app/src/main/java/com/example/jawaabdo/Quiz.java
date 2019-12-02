@@ -22,16 +22,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class Quiz extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef ;
     Quizdata quizdata=new Quizdata();
-    String courseName , uid , position;
+    String courseName , uid , position , instructorName;
     CountDownTimer ct;
     Button next;
     Button submit;
+    Button previous;
     TextView tq;
     RadioGroup rg;
     RadioButton viewopt1;
@@ -42,10 +44,11 @@ public class Quiz extends AppCompatActivity {
     String[] questions;
     String[][] option;
     String[] solutions;
-    private int score;
+    private int score = 0;
     private int onQuestion=1;//1-indexing
     TextView timer;
     long timeleft=12000;//10mins
+    int sumlist[];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +56,6 @@ public class Quiz extends AppCompatActivity {
         courseName=getIntent().getStringExtra("Cname");
         uid = getIntent().getStringExtra("Userid") ;
         position = getIntent().getStringExtra("position") ;
-
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         tq=(TextView)findViewById(R.id.questionview);
@@ -64,6 +66,8 @@ public class Quiz extends AppCompatActivity {
         viewopt4=(RadioButton)findViewById(R.id.radioopt4);
         next=(Button)findViewById(R.id.next);
         submit=(Button)findViewById(R.id.submit);
+        previous = findViewById(R.id.previous);
+        previous.setVisibility(View.INVISIBLE);
         DatabaseReference myRef = database.getReference("Courses/" + courseName );
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -122,9 +126,8 @@ public class Quiz extends AppCompatActivity {
                     stringTextView.setText(stringTextView.getText().toString() + name + " ,");
 
                 }
-                int p=(int)dataSnapshot.child("Tests").getChildrenCount()/6;
-
-
+                int p=(int)dataSnapshot.child("Tests").child(position).getChildrenCount()/6;
+                sumlist = new int[p];
 //                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
 //                {
 //                    @Override
@@ -212,8 +215,25 @@ public class Quiz extends AppCompatActivity {
                         //Log.i("sns" ,option[onQuestion-1][Integer.parseInt(solutions[onQuestion-1] ) - 1] + " " + temp.getText() ) ;
 
                         if(temp.getText().equals(option[onQuestion-1][Integer.parseInt(solutions[onQuestion-1] ) - 1])){
-                            score++;
-                            Log.i("sns" , score + "dsds") ;
+                            Log.i("aasr","correct response onQuestion : "+onQuestion);
+                            sumlist[onQuestion-1] = 1;
+                            int n = sumlist.length;
+                            int ss = 0;
+                            for(int i = 0;i<n;i++)
+                                ss+=sumlist[i];
+                            score = ss;
+//                            score++;
+                            Log.i("aasr",Arrays.toString(sumlist)+"  correct");
+                        }
+                        else{
+                            Log.i("aasr","wrong response onQuestion : "+onQuestion);
+                            sumlist[onQuestion-1] = 0;
+                            int n = sumlist.length;
+                            int ss = 0;
+                            for(int i = 0;i<n;i++)
+                                ss+=sumlist[i];
+                            score = ss;
+                            Log.i("aasr", Arrays.toString(sumlist)+"  wrong");
                         }
 
                     }
@@ -250,11 +270,71 @@ public class Quiz extends AppCompatActivity {
             submit.setVisibility(View.VISIBLE);
 
         }
+        previous.setVisibility(View.VISIBLE);
         showNextQuestion();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        showResult();  // if activity is destroyed somehow, then result will be submitted.
+    }
+
+    public void Previous(View view){
+//        Log.d("Next","Debug ME")
+        Log.i("ashishrana","Previous onclick and num question = "+onQuestion+"");
+        if(onQuestion <= 1){
+            previous.setVisibility(View.INVISIBLE);
+            return;
+        }
+        next.setVisibility(View.VISIBLE);
+        submit.setVisibility(View.INVISIBLE);
+
+        showPreviousQuestion();
+    }
+
     public void showResult(){
-        myRef = database.getReference("Users/" + uid + "/Courses/") ;
-        myRef.child(courseName).child(position).setValue(score + "") ;
+        Log.i("aasr","sum is "+score);
+        myRef = FirebaseDatabase.getInstance().getReference();
+        myRef.child("Courses").child(courseName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                instructorName=(String)dataSnapshot.child("Instructor_UID").getValue();
+                Log.d("InsName ",instructorName);
+                DatabaseReference myRef2=FirebaseDatabase.getInstance().getReference();
+                myRef2.child("Users").child(uid).child("Courses").child(courseName).child(position).setValue(position);
+
+                DatabaseReference myRef3 = FirebaseDatabase.getInstance().getReference() ;
+                myRef3.child("Users").child(uid).child("Roll_no").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String rno = (String) dataSnapshot.getValue() ;
+                        DatabaseReference myRef2=FirebaseDatabase.getInstance().getReference();
+                        int n = sumlist.length;
+                        int ss = 0;
+                        for(int i = 0;i<n;i++)
+                            ss+=sumlist[i];
+                        score = ss;
+                        Log.i("aasr",Arrays.toString(sumlist)+"  onsubmit");
+                        Log.i("aasr",ss+" sum on onsubmit");
+                        myRef2.child("Users").child(instructorName).child("Courses").child(courseName).child(position).child(rno).setValue(score);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+//
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+        //myRef = database.getReference("Users/" + uid + "/Courses/") ;
+        //myRef.child(courseName).child(position).setValue(score + "") ;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
         builder.setIcon(R.mipmap.ic_launcher);
@@ -285,6 +365,21 @@ public class Quiz extends AppCompatActivity {
         viewopt4.setText(option[onQuestion-1][3]);
 
     }
+    public void showPreviousQuestion(){
+        onQuestion--;
+//        viewopt1.setChecked(false);
+//        viewopt2.setChecked(false);
+//        viewopt3.setChecked(false);
+//        viewopt4.setChecked(false);
+        Log.i("ashishrana" , questions.length + " length in previousquestion") ;
+        tq.setText(questions[onQuestion-1]);
+        viewopt1.setText(option[onQuestion-1][0]);
+        viewopt2.setText(option[onQuestion-1][1]);
+        viewopt3.setText(option[onQuestion-1][2]);
+        viewopt4.setText(option[onQuestion-1][3]);
+
+    }
+
     public void answerChecked(View view){
 
     }

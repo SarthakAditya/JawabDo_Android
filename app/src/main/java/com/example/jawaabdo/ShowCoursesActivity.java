@@ -19,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
 import android.widget.TextView;
 
 
@@ -33,14 +35,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import javax.annotation.Nonnull;
+//import javax.annotation.Nonnull;
 
 
 public class ShowCoursesActivity extends AppCompatActivity {
 
+    String[] courseslist ={} ;
+    String[] instList ={} ;
     String userID;
     String courseID;
     private DatabaseReference mDatabase;
+    int image=R.drawable.teacher;
+    ListView list;
 
     TextView dp2;
 
@@ -61,8 +67,8 @@ public class ShowCoursesActivity extends AppCompatActivity {
         Log.i("my_message", "id in showcrouse is " + userID);
         dp2 = (TextView) findViewById(R.id.noCoursesTextView);
         dp2.setVisibility(View.GONE);
-        TextView stringTextView = (TextView) findViewById(R.id.showCoursesTextView);
-        stringTextView.setVisibility(View.GONE);
+        //TextView stringTextView = (TextView) findViewById(R.id.showCoursesTextView);
+        //stringTextView.setVisibility(View.GONE);
         showCourse();
     }
 
@@ -73,78 +79,80 @@ public class ShowCoursesActivity extends AppCompatActivity {
     }
 
 
-    View.OnClickListener btnClicked = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Object tag = v.getTag();
-            Log.d("my_message", tag.toString());
-            //Toast.makeText(getApplicationContext(), "clicked button", Toast.LENGTH_SHORT).show();
-            showQuiz((int) tag);
-        }
-    };
-
 
     private void showCourse() {
         // get courses from firebase and show them as button each button should open ShowQuizzesActivity
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        //  x=mDatabase.child("users").child("NoZoSh0pKJMdBTrvuf1mqY6S60s1").getDatabase();
-        names = new ArrayList<>();
-        Log.d("my_message", userID);
-        mDatabase.child("Users").child(userID).child("Courses")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+        DatabaseReference myRef = mDatabase.child("Users/"+userID +"/Courses").getRef();
 
 
-                        if (dataSnapshot.getChildrenCount() == 0) {
-
-                            dp2.setVisibility(View.VISIBLE);
-                            noCourses = 0;
-                        } else {
-                            noCourses = 1;
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Log.d("my_message", snapshot.toString());
-                                String name = snapshot.getValue(String.class);
-                                names.add(name);
-                            }
-                            Log.d("my_message", "abc" + Integer.toString(names.size()));
-
-                            for (String name : names) {
-                                TextView stringTextView = (TextView) findViewById(R.id.showCoursesTextView);
-                                stringTextView.setText(stringTextView.getText().toString() + name + " ,");
-
-                            }
-                            TextView stringTextView = (TextView) findViewById(R.id.showCoursesTextView);
-                            String courses = stringTextView.getText().toString();
-
-                            String[] separated = courses.split(" ,");
-                            Log.d("my_message", "" + separated.length);
 
 
-                            btnWord = new Button[separated.length];
-                            linear = (LinearLayout) findViewById(R.id.linear);
-                            Log.d("my_message", "" + btnWord.length);
-                            for (int i = 0; i < btnWord.length; i++) {
+        myRef.addValueEventListener(new ValueEventListener() {
 
-                                btnWord[i] = new Button(getApplicationContext());
-                                btnWord[i].setHeight(50);
-                                btnWord[i].setWidth(50);
-                                btnWord[i].setTag(i);
-                                btnWord[i].setOnClickListener(btnClicked);
-                                btnWord[i].setText(separated[i]);
-                                linear.addView(btnWord[i]);
-                            }
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+                names = new ArrayList<>();
+                if (dataSnapshot.getChildrenCount() == 0) {
+
+                    dp2.setVisibility(View.VISIBLE);
+                    list=(ListView)findViewById(R.id.coursesList2);
+                    list.setVisibility(View.GONE);
+                    noCourses = 0;
+                }
+                else {
+                    dp2.setVisibility(View.GONE);
+                    noCourses = 1;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Log.d("my_message", snapshot.toString());
+                        String name = snapshot.getKey();
+                        names.add(name);
+                    }
+
+                    int numofcourses=names.size();
+                    courseslist = new String[numofcourses];
+                    instList=new String[numofcourses];
+
+
+                    int i=0;
+                    int j=0;
+                    for(String name : names) {
+                        courseslist[i++]=name;
+                        instList[j++]="";
+
+                    }
+
+
+
+                    list=(ListView)findViewById(R.id.coursesList2);
+
+
+                    MyAdapter adapter = new MyAdapter(ShowCoursesActivity.this, courseslist, image ,instList);
+                    list.setAdapter(adapter);
+                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            Intent intent=new Intent(getApplicationContext(),ShowQuizzesActivity.class);
+                            intent.putExtra("EXTRA_COURSE_ID" , courseslist[i]) ;
+                            intent.putExtra("EXTRA_USER_ID" , userID) ;
+                            startActivity(intent);
 
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d("my_message", "Incancel");
-                    }
-                });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("my_message", "Incancel");
+            }
+        });
 
     }
 
@@ -157,112 +165,52 @@ public class ShowCoursesActivity extends AppCompatActivity {
 
     }
 
-    public void showQuiz(int a) {
-        TextView stringTextView = (TextView) findViewById(R.id.showCoursesTextView);
-        String courses = stringTextView.getText().toString();
-        //Log.d("my_message","here");
-        String[] separated = courses.split(" ,");
-        Intent intent = new Intent(this, ShowQuizzesActivity.class);
-        intent.putExtra("EXTRA_USER_ID", userID);
-        intent.putExtra("EXTRA_COURSE_ID", separated[a]);
-        Log.d("my_message", separated[a].length() + "" + separated[a]);
-        startActivity(intent);
-    }
+
+
+    class MyAdapter extends ArrayAdapter<String>{
+        Context context;
+        String[] cnames;
+        String[] instnames;
+        int image;
+        MyAdapter(Context c,String[] cnames,int image,String[] instnames){
+            super(c,R.layout.row,R.id.cname,cnames);
+            this.context=c;
+            this.cnames=cnames;
+            this.image=image;
+            this.instnames = instnames;
+        }
+        //@Nonnull
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = layoutInflater.inflate(R.layout.row, parent, false);
+            ImageView images = row.findViewById(R.id.image);
+            TextView myTitle = row.findViewById(R.id.cname);
+            TextView myDescription = row.findViewById(R.id.iname);
+
+            // now set our resources on views
+            images.setImageResource(image);
+            myTitle.setText(cnames[position]);
+            myDescription.setText(instnames[position]);
+
+
+
+
+            return row;
+        }
+    };
     public void logout(View view) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("a", "");
         editor.putString("b", "");
         editor.apply();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
 
 }
-/*
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-
-
-        //Log.i("abcd" , quizdata.options[0][1]) ;
-        Intent intent=new Intent(this,ShowQuizzes.class);
-        intent.putExtra("Quiz_data" , courseslist[position]) ;
-        intent.putExtra("Userid" , user_id) ;
-        startActivity(intent);
-    }
-class MyAdapter extends ArrayAdapter<String> {
-    Context context;
-    String[] cnames;
-    int image;
-    MyAdapter(Context c,String[] cnames,int image){
-        super(c,R.layout.row,R.id.cname,cnames);
-        this.context=c;
-        this.cnames=cnames;
-        this.image=image;
-    }
-    @Nonnull
-
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = layoutInflater.inflate(R.layout.row, parent, false);
-        ImageView images = row.findViewById(R.id.image);
-        TextView myTitle = row.findViewById(R.id.cname);
-//            TextView myDescription = row.findViewById(R.id.iname);
-
-        // now set our resources on views
-        images.setImageResource(image);
-        myTitle.setText(cnames[position]);
-
-        return row;
-    }
-}
-}
-
-
-
-/*13 of 9,631
-Document from Rahul Garg
-Inbox
-	x
-Rahul Garg <rahul16072@iiitd.ac.in>
-
-AttachmentsThu, Oct 31, 9:40 PM (17 hours ago)
-
-to me
-Courses.java
-Attachments area
-
-
-
-
-package com.example.jawaabdo;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.view.View;
-
-public class Courses extends AppCompatActivity implements AdapterView.OnItemClickListener {
-    ListView list;
-    String[] courseslist ={"Mobile Computing"};
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_courses);
-        list=(ListView)findViewById(R.id.coursesList);
-        ArrayAdapter<String> courses =new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,courseslist);
-        list.setAdapter(courses);
-        list.setOnItemClickListener(this);
-    }
-    public void onItemClick(AdapterView<?>parent,View view,int position,long id){
-        Intent intent=new Intent(this,Quiz.class);
-        startActivity(intent);
-    }
-}
-*/
-

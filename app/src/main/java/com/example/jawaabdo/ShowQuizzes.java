@@ -45,7 +45,7 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
 
         courseName=getIntent().getStringExtra("Quiz_data");
-        uid = getIntent().getStringExtra("Userid") ;
+        uid = getIntent().getStringExtra("Userid");
         CoursesRef = database.getReference("Courses/" + courseName);
 
         CoursesRef.addValueEventListener(new ValueEventListener() {
@@ -130,14 +130,35 @@ public class ShowQuizzes extends AppCompatActivity  implements AdapterView.OnIte
                             Log.d("SarthakAditya","End Time : "+ endtime);
                             if(curtime >= quiztime && curtime < endtime){
                                 Log.d("SarthakAditya", "Inside loop position is : "+position);
-                                Intent intent=new Intent(getApplicationContext(),Quiz.class);
-                                intent.putExtra("Cname",courseName);
-                                intent.putExtra("Userid" , uid);
-                                intent.putExtra("position" , qlist[position]);
-                                startActivity(intent);
+                                final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                                database.child("Users").child(uid).child("Courses").child(courseName).child(qlist[position]).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String val = (String)dataSnapshot.getValue();
+                                        Log.i("aasr","value is "+val);
+                                        if(val == null){
+                                            Intent intent=new Intent(getApplicationContext(),Quiz.class);
+                                            intent.putExtra("Cname",courseName);
+                                            intent.putExtra("Userid" , uid);
+                                            intent.putExtra("position" , qlist[position]);
+                                            startActivity(intent);
+                                        }
+                                        else{
+                                            Toast.makeText(getApplicationContext(),"Quiz already taken once",Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         }
-                        Toast.makeText(getApplicationContext(),"Quiz not Available",Toast.LENGTH_SHORT).show();
+                        else{
+                            Toast.makeText(getApplicationContext(),"Quiz not Available",Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

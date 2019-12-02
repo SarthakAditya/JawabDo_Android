@@ -285,6 +285,8 @@ public class Courses extends AppCompatActivity implements AdapterView.OnItemClic
         editor.putString("a","");
         editor.putString("b","");
         editor.apply();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }

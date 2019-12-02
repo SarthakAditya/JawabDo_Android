@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,21 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         firebaseAuth = FirebaseAuth.getInstance();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String uT = pref.getString("a","");
-        String userId = pref.getString("b","");
-        Log.i("ashishrana","sharedprefereces stored - "+uT+"  "+userId);
-        if(uT.equals("F") ){
-            Intent intent = new Intent(RegisterActivity.this, Courses.class);
-            intent.putExtra("userid",userId);
-            startActivity(intent);
-        }
-        else if(uT.equals("T")){
-            Intent intent = new Intent(RegisterActivity.this, ShowCoursesActivity.class);
-            Log.d("my_message","user id is login is "+userId);
-            intent.putExtra("EXTRA_USER_ID",userId);
-            startActivity(intent);
-        }
         rolltext = (TextView) findViewById(R.id.textViewRollNo);
         rolledit = (EditText) findViewById(R.id.RollNo);
         loginasrg=(RadioGroup)findViewById(R.id.loginasrg);
@@ -110,6 +93,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 myRef.child("Faculty").setValue(userType) ;
                                 Toast toast=Toast.makeText(getApplicationContext(),"User Registered, Verify email please",Toast.LENGTH_SHORT);
                                 toast.show();
+                                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                             else{
                                 Log.i("ashish","failed in verification");
@@ -130,10 +116,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
         /*
          */
-    }
-
-    public void add_user_todatabase(){
-
     }
 
     public  void login(View view){

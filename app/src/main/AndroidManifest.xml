@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShowQuizzes"></activity>
+        <activity android:name=".ShowStudentMarks"></activity>
+        <activity android:name=".ShowQuizzes" />
         <activity
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -22,7 +23,7 @@
         <activity android:name=".Quiz" />
         <activity android:name=".Courses" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".UpdateQuizActivity"></activity>
+        <activity android:name=".UpdateQuizActivity" />
         <activity android:name=".AddQuizActivity" />
         <activity android:name=".ShowQuizzesActivity" />
         <activity android:name=".AddCoursesActivity" />
@@ -31,9 +32,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".AlertReceiver" />
     </application>
 
