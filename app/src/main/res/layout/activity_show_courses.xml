@@ -29,18 +29,23 @@
 
 
     <Button
+        android:layout_marginLeft="10dp"
+        android:padding="15dp"
+        android:background="@drawable/button_rectangle_green"
         android:id="@+id/confirmAddCourseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:onClick="addCourses"
         android:layout_alignParentEnd="true"
-
         android:layout_above="@+id/button2"
         android:text="@string/addCourses" />
 
 
     <Button
+        android:layout_marginLeft="10dp"
+        android:padding="20dp"
+        android:background="@drawable/button_rectangle_green"
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

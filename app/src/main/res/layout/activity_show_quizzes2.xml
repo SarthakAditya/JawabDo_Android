@@ -7,17 +7,6 @@
     android:gravity="center"
     tools:context=".ShowQuizzes">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:text=""
-    android:textColor="#000"
-    android:textStyle="bold"
-    android:layout_margin="5dp"
-    android:textSize="20sp"
-    android:id="@+id/Title"
-    />
     <TextView
         android:id="@+id/noQuizzesTextView"
         android:layout_width="wrap_content"
@@ -32,22 +21,23 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:layout_below="@+id/Title"
+        android:divider="@android:color/transparent"
         android:layout_above="@+id/addQuizButton"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:dividerHeight="10.0sp"
+        android:scrollbars="none">
 
     </ListView>
 
     <Button
+        android:layout_marginLeft="10dp"
+        android:padding="20dp"
+        android:background="@drawable/button_rectangle_green"
         android:id="@+id/addQuizButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
-
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-
         android:onClick="addQuiz"
         android:text="@string/addQuiz" />
 

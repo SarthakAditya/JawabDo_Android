@@ -7,6 +7,9 @@
     tools:context=".AddQuizActivity">
 
     <Button
+        android:layout_marginLeft="10dp"
+        android:padding="20dp"
+        android:background="@drawable/button_rectangle_green"
         android:id="@+id/addQuiz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

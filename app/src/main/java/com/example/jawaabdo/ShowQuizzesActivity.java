@@ -65,8 +65,7 @@ public class ShowQuizzesActivity extends AppCompatActivity {
         userID = getIntent().getStringExtra("EXTRA_USER_ID");
         // courseID="MC";
         courseID=getIntent().getStringExtra("EXTRA_COURSE_ID");
-        courseTitle = findViewById(R.id.Title);
-        courseTitle.setText(courseID);
+
         showQuizzes();
     }
 
